@@ -2,6 +2,7 @@ import numpy as np
 from sklearn import model_selection, feature_selection
 from resize_and_stack_images import make_stacked_images
 from create_masks import create_masks
+import class_distribution as cdist
 from vectorize import set_feature_and_mask_vector
 import classification as cls
 
@@ -9,8 +10,8 @@ if __name__ == '__main__':
     h = 500
     w = int(h * 1.014)
 
-    pixels = np.load("pixels.npy")
-    labels = np.load("labels.npy")
+    pixels = np.load("balanced_pixels.npy")
+    labels = np.load("balanced_labels.npy")
 
     num_of_feature = 10
     pixels_new = feature_selection.SelectKBest(feature_selection.chi2, num_of_feature).fit_transform(pixels, labels)
