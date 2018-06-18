@@ -2,9 +2,19 @@ import numpy as np
 from sklearn import svm, model_selection, neighbors, neural_network, naive_bayes, tree, feature_selection
 from sklearn.metrics import accuracy_score, confusion_matrix, jaccard_similarity_score, f1_score, recall_score, precision_score
 import class_distribution as cdist
+from sklearn.ensemble import RandomForestClassifier
 
-def classification_with_SVM(pxl_train, label_train, pxl_test, kernel='rbf'):
-    clf = svm.SVC(kernel=kernel)
+def classification_with_SVM(pxl_train, label_train, pxl_test, kernel):
+    clf = svm.SVC(kernel=kernel, cache_size=6000, degree=40, verbose=1)
+    print("clf_", kernel)
+    clf.fit(pxl_train, label_train)
+    print("clf2_", kernel)
+    predictions = clf.predict(pxl_test)
+    print("clf_", kernel)
+    return predictions
+
+def classification_with_random_forest(pxl_train, label_train, pxl_test):
+    clf = RandomForestClassifier(n_estimators=10, max_depth=None, min_samples_split=2, random_state=0)
     clf.fit(pxl_train, label_train)
     predictions = clf.predict(pxl_test)
     return predictions
@@ -56,10 +66,11 @@ if __name__ == '__main__':
     h = 500
     w = int(h * 1.014)
 
-    cdist.cdist_main()
+    # cdist.cdist_main()
 
     #TODO Tüm pixel_x.npy'lerle çalıştır
     conv = [1, 3, 5, 9, 11, 13]
+
 
     for i in conv:
         pixels = np.load('selected_pixels_' + str(i) + '.npy')
@@ -78,7 +89,7 @@ if __name__ == '__main__':
         k_neighbors = [3, 5, 7]
         hidden_layer = [(20, 20, 20, 20), (40, 40, 40, 40)]
 
-
+        '''
         for k in k_neighbors:
             predictions = classification_with_nearest_neighbors(pxl_train, label_train, pxl_test, k)
             calculate_metrics(str(i) + '_' + str(k)+'NN', predictions, label_test)
@@ -92,8 +103,11 @@ if __name__ == '__main__':
         for layer, j in zip(hidden_layer, range(2)):
             predictions = classification_with_MLP(pxl_train, label_train, pxl_test, layer)
             calculate_metrics(str(i) + '_' + str(j)+'_MLP', predictions, label_test)
+    '''
+        predictions = classification_with_random_forest(pxl_train, label_train, pxl_test)
+        calculate_metrics(str(i) + '_' + 'random_forest', predictions, label_test)
 
-
+    '''
     for i in conv:
         pixels = np.load('selected_pixels_' + str(i) + '.npy')
         labels = np.load('selected_labels.npy')
@@ -107,9 +121,10 @@ if __name__ == '__main__':
         # TODO AYNI TEST VE TRAN İÇİN SONUCLARI KARŞILASTIR !! MLP BİTMİYORI
         pxl_train, pxl_test, label_train, label_test = model_selection.train_test_split(pixels, labels, test_size=0.33)
 
-        svm_kernels = ['rbf', 'poly', 'linear', 'sigmoid']
+        svm_kernels = ['linear']
 
         for kernel in svm_kernels:
-            print(kernel + 'SVM')
+            print(kernel + '_SVM')
             predictions = classification_with_SVM(pxl_train, label_train, pxl_test, kernel)
             calculate_metrics(str(i) + '_' + kernel + '_SVM', predictions, label_test)
+    '''

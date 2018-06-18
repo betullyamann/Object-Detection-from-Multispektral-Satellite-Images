@@ -62,7 +62,7 @@ def random_sampling(pixels, labels, j):
 
 
 def cdist_main():
-    conv = [1, 3, 5, 7, 9]
+    conv = [1, 3, 5, 7, 9, 11, 13]
     labels = np.load("labels.npy")
     for i in conv:
         pixels = np.load("pixels_" + str(i) + ".npy")
