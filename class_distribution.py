@@ -1,9 +1,6 @@
 import numpy as np
 
-labels = np.load("labels.npy")
-pixels = np.load("pixels_1.npy")
-
-def count_elements():
+def count_elements(labels):
     bins = [[], [], [], [], [], [], [], [], [], [], []]
     number_of_elements = []
 
@@ -19,7 +16,7 @@ def count_elements():
     '''
 
 
-def balance_class_distribution():
+def balance_class_distribution(labels, pixels):
     new_pixels = []
     new_labels = []
 
@@ -49,10 +46,39 @@ def balance_class_distribution():
     '''
     return new_pixels, new_labels
 
+def random_sampling(pixels, labels, j):
+    n_pxls = []
+    n_labels = []
+    idxs = np.random.choice(len(pixels), 200000)
+    for i in idxs:
+        n_pxls.append(pixels[i])
+        n_labels.append(labels[i])
 
+    n_pxls = np.array(n_pxls)
+    n_labels = np.array(n_labels)
+
+    np.save("selected_pixels_" + str(j), np.array(n_pxls))
+    np.save("selected_labels", np.array(n_labels))
+
+
+def cdist_main():
+    conv = [1, 3, 5, 7, 9]
+    labels = np.load("labels.npy")
+    for i in conv:
+        pixels = np.load("pixels_" + str(i) + ".npy")
+
+        count_elements(labels)
+        new_pixels, new_labels = balance_class_distribution(labels, pixels)
+        np.save("balanced_pixels_" + str(i), np.array(new_pixels))
+        np.save("balanced_labels", np.array(new_labels))
+
+        new_pixels = np.load("balanced_pixels_" + str(i) + ".npy")
+        new_labels = np.load("balanced_labels.npy")
+
+        random_sampling(new_pixels, new_labels, i)
+
+
+'''
 if __name__ == '__main__':
-    count_elements()
-    new_pixels, new_labels = balance_class_distribution()
-
-    np.save("balanced_pixels", np.array(new_pixels))
-    np.save("balanced_labels", np.array(new_labels))
+    cdist_main()  
+'''

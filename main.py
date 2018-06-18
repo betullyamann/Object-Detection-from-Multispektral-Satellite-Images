@@ -10,11 +10,11 @@ if __name__ == '__main__':
     h = 500
     w = int(h * 1.014)
 
-    pixels = np.load("balanced_pixels.npy")
-    labels = np.load("balanced_labels.npy")
+    pixels = np.load("selected_pixels.npy")
+    labels = np.load("selected_labels.npy")
 
-    num_of_feature = 10
-    pixels_new = feature_selection.SelectKBest(feature_selection.chi2, num_of_feature).fit_transform(pixels, labels)
+    #num_of_feature = 10
+    #pixels_new = feature_selection.SelectKBest(feature_selection.chi2, num_of_feature).fit_transform(pixels, labels)
 
     # return label index
     # 0010000000 -> 2.label
