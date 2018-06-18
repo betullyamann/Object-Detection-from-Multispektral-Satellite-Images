@@ -1,64 +1,37 @@
 import numpy as np
 
-def count_elements(labels):
+def count_elements(labels, pixels):
     bins = [[], [], [], [], [], [], [], [], [], [], []]
-    number_of_elements = []
+    bins_pixels = [[], [], [], [], [], [], [], [], [], [], []]
 
-    for label, i in zip(labels, range(len(labels))):
+    for label, pixel, i in zip(labels, pixels, range(len(labels))):
         sum = np.sum(label)
         if sum == 0:
-            bins[10].append(i)
+            bins[10].append(label)
+            bins_pixels[10].append(pixel)
         elif sum == 1:
-            bins[np.argmax(label)].append(i)
-    '''
-    for i in range(len(bins)):
-        print(len(bins[i]))
-    '''
+            bins[np.argmax(label)].append(label)
+            bins_pixels[np.argmax(label)].append(pixel)
 
+    bins[0] = np.array(bins[0])
+    print(bins[0].shape)
 
-def balance_class_distribution(labels, pixels):
-    new_pixels = []
-    new_labels = []
+    arr = [0, 3, 4, 5, 10]
+    for j in arr:
+        bins[j] = bins[j, :100000]
+        bins_pixels[j] = bins_pixels[j, :100000]
 
-    for label, pixel in zip(labels, pixels):
-        new_pixels.append(pixel)
-        new_labels.append(label)
+    arr2 = [1, 2, 6]
+    for i in arr2:
+        for j in range(3):
+            bins[i].extend(bins[i])
+            bins_pixels[i].extend(bins_pixels[i])
 
-    for label, pixel in zip(labels, pixels):
-        sum = np.sum(label)
-        if sum != 0:
-            if np.argmax(label) == 8 or np.argmax(label) == 9:
-                for j in range(100):
-                    new_pixels.append(pixel)
-                    new_labels.append(label)
-    '''
-    bins = [[], [], [], [], [], [], [], [], [], [], []]
-    
-    for label2, i in zip(new_labels, range(len(new_labels))):
-        sum = np.sum(label2)
-        if sum == 0:
-            bins[10].append(i)
-        elif sum == 1:
-            bins[np.argmax(label2)].append(i)
-
-    for i in range(len(bins)):
-        print(len(bins[i]))
-    '''
-    return new_pixels, new_labels
-
-def random_sampling(pixels, labels, j):
-    n_pxls = []
-    n_labels = []
-    idxs = np.random.choice(len(pixels), 200000)
-    for i in idxs:
-        n_pxls.append(pixels[i])
-        n_labels.append(labels[i])
-
-    n_pxls = np.array(n_pxls)
-    n_labels = np.array(n_labels)
-
-    np.save("selected_pixels_" + str(j), np.array(n_pxls))
-    np.save("selected_labels", np.array(n_labels))
+    arr3 = [7, 8, 9]
+    for i in arr3:
+        for j in range(3):
+            bins[i].extend(bins[i])
+            bins_pixels[i].extend(bins_pixels[i])
 
 
 def cdist_main():
@@ -69,16 +42,28 @@ def cdist_main():
 
         count_elements(labels)
         new_pixels, new_labels = balance_class_distribution(labels, pixels)
-        np.save("balanced_pixels_" + str(i), np.array(new_pixels))
-        np.save("balanced_labels", np.array(new_labels))
 
-        new_pixels = np.load("balanced_pixels_" + str(i) + ".npy")
-        new_labels = np.load("balanced_labels.npy")
+        new_pixels = np.array(new_pixels)
+        new_labels = np.array(new_labels)
 
-        random_sampling(new_pixels, new_labels, i)
+        n_pxls = []
+        n_labels = []
+        idxs = np.random.choice(len(new_pixels), 200000)
+
+        for j in idxs:
+            n_pxls.append(new_pixels[j])
+            n_labels.append(new_labels[j])
+
+        n_pxls = np.array(n_pxls)
+        n_labels = np.array(n_labels)
+
+        np.save("selected_pixels_" + str(i), np.array(n_pxls))
+        np.save("selected_labels", np.array(n_labels))
 
 
-'''
 if __name__ == '__main__':
-    cdist_main()  
-'''
+    labels = np.load("labels.npy")
+    pixels = np.load("pixels_1.npy")
+    count_elements(labels, pixels)
+   # cdist_main()
+

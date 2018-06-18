@@ -74,7 +74,7 @@ if __name__ == '__main__':
 
     for i in conv:
         pixels = np.load('selected_pixels_' + str(i) + '.npy')
-        labels = np.load('selected_labels.npy')
+        labels = np.load('labels_with_11_class.npy')
 
         pixels = np.squeeze(pixels, 2)
 
@@ -89,7 +89,7 @@ if __name__ == '__main__':
         k_neighbors = [3, 5, 7]
         hidden_layer = [(20, 20, 20, 20), (40, 40, 40, 40)]
 
-        '''
+
         for k in k_neighbors:
             predictions = classification_with_nearest_neighbors(pxl_train, label_train, pxl_test, k)
             calculate_metrics(str(i) + '_' + str(k)+'NN', predictions, label_test)
@@ -103,11 +103,11 @@ if __name__ == '__main__':
         for layer, j in zip(hidden_layer, range(2)):
             predictions = classification_with_MLP(pxl_train, label_train, pxl_test, layer)
             calculate_metrics(str(i) + '_' + str(j)+'_MLP', predictions, label_test)
-    '''
+
         predictions = classification_with_random_forest(pxl_train, label_train, pxl_test)
         calculate_metrics(str(i) + '_' + 'random_forest', predictions, label_test)
 
-    '''
+
     for i in conv:
         pixels = np.load('selected_pixels_' + str(i) + '.npy')
         labels = np.load('selected_labels.npy')
@@ -127,4 +127,3 @@ if __name__ == '__main__':
             print(kernel + '_SVM')
             predictions = classification_with_SVM(pxl_train, label_train, pxl_test, kernel)
             calculate_metrics(str(i) + '_' + kernel + '_SVM', predictions, label_test)
-    '''

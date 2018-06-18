@@ -77,21 +77,32 @@ def set_feature_and_mask_vector():
         np.save("pixels_" + str(i), np.array(pixels))
         np.save("labels", np.array(labels))
 
+
 def class_11():
-    labels = []
-    pixels = np.load("selected_pixels_1.npy")
-    np_labels = np.load("selected_labels.npy")
+    new_labels = []
+    new_pixels = []
+    conv = [1]
 
-    for i in np_labels:
-        labels.append(i)
+    labels = np.load("labels.npy").tolist()
+    for c in conv:
+        pixels = np.load("pixels_" + str(c) + ".npy").tolist()
+        for label, pixel, i in zip(labels, pixels, range(len(labels))):
+            sum = np.sum(label)
+            if sum == 0:
+                label.append(1)
+                new_labels.append(label)
+                new_pixels.append(pixel)
+            elif sum == 1:
+                label.append(1)
+                new_labels.append(label)
+                new_pixels.append(pixel)
 
-    for label, i in zip(labels, range(len(labels))):
-        sum = np.sum(label)
-        if sum == 0:
-            label.append(1)
-        elif sum == 1:
-            label.append(0)
+        new_labels = np.array(new_labels)
+        new_pixels = np.array(new_pixels)
 
+        print(new_pixels.shape)
+        print(new_labels.shape)
 
 if __name__ == '__main__':
-    set_feature_and_mask_vector()
+    #set_feature_and_mask_vector()
+    class_11()
