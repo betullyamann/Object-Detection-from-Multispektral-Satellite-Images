@@ -69,12 +69,12 @@ if __name__ == '__main__':
     # cdist.cdist_main()
 
     #TODO Tüm pixel_x.npy'lerle çalıştır
-    conv = [1, 3, 5, 9, 11, 13]
-
+    #conv = [1, 3, 5, 7, 9, 11, 13]
+    conv = [7]
 
     for i in conv:
-        pixels = np.load('selected_pixels_' + str(i) + '.npy')
-        labels = np.load('labels_with_11_class.npy')
+        pixels = np.load('final_pixels' + str(i) + '.npy')
+        labels = np.load('final_labels.npy')
 
         pixels = np.squeeze(pixels, 2)
 
@@ -109,13 +109,14 @@ if __name__ == '__main__':
 
 
     for i in conv:
-        pixels = np.load('selected_pixels_' + str(i) + '.npy')
-        labels = np.load('selected_labels.npy')
+        pixels = np.load('final_pixels' + str(i) + '.npy')
+        labels = np.load('final_labels.npy')
 
         pixels = np.squeeze(pixels, 2)
 
         # return label index
         # 0010000000 -> 2.label
+
         labels = np.argmax(labels, axis=1)
 
         # TODO AYNI TEST VE TRAN İÇİN SONUCLARI KARŞILASTIR !! MLP BİTMİYORI
